@@ -1,9 +1,26 @@
-FROM python:3.7-buster
+FROM public.ecr.aws/lambda/python:3.8
+
+
+	
+RUN \
+  yum install which wget tar gzip xz libsndfile libsndfile-devel -y && \
+  pip install --upgrade pip && \
+  pip install soundfile librosa scikit-image
 
 RUN \
-  pip install --upgrade pip wheel setuptools && \
-  pip install librosa
+  mkdir /tmp/ffmpeg/; cd /tmp/ffmpeg/ && \
+  pwd && \
+  wget https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-amd64-static.tar.xz && \
+  ls && \
+  tar xvf ffmpeg-git-amd64-static.tar.xz && \
+  mv ffmpeg-git-20210425-amd64-static/ffmpeg ffmpeg-git-20210425-amd64-static/ffprobe /usr/local/bin/ && \
+  which ffmpeg
+  
+  
+#ENV PATH /tmp/ffmpeg/ffmpeg-git-20210425-amd64-static/ffmpeg:${PATH}
 
-COPY . .
+ENV NUMBA_CACHE_DIR=/tmp/numba_cache
 
-ENTRYPOINT ./music_image_features.py
+COPY lambda.py ./
+
+CMD ["lambda.lambda_handler"]
