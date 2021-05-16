@@ -7,6 +7,8 @@ RUN \
   pip install --upgrade pip && \
   pip install soundfile librosa scikit-image
 
+# make and enter new temp directory; get the files from johnvansickle to convert
+# mp3 to wav files and extract
 RUN \
   mkdir /tmp/ffmpeg/; cd /tmp/ffmpeg/ && \
   pwd && \

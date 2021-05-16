@@ -1,14 +1,29 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Top-n Music Genre Predicter</title>
+    <meta charset="utf-8">
+    <title>Top-n Music Genre Prediction</title>
+    <base href="/">
+    <link rel="stylesheet" href="static/style.css" type="text/css">
   </head>
-  <body>
+  <body overflow="none">
+      <!-- Header Ribbon Menu -->
+      <div id="wrapper">
+          <nav>
+              <ul class="navbar">
+                  <li><a href="/" class="active">Home</a></li>
+                  <li><a href="/about">About</a></li>
+              </ul>
+          </nav>
+      </div>
+
     <div class="content">
-        <h3>Music Predicter Demo</h3>
-        <p>This is only a demo of AWS implementation</p>
+        <h3>Top-n Music Classification</h3>
+        <p>Upload a .mp3 or .wav file here. The maximum size accepted is 10 MB.</p>
+        <p>We will predict the genre of your audiofile, and list the results from most to least likely</p>
+        <img src="static/omega_staff.png" alt="Omega symbol with musical staff" width="500" height="333"></img>
         <div>
-          <h3>Upload mp3 file:</h3>
+          <h3>Upload file:</h3>
           <form method="POST" action="/upload" enctype=multipart/form-data>
             <input type=file name=file>
             <input type=submit value=Upload>
