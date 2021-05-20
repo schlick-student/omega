@@ -20,7 +20,7 @@ def list_files(bucket):
     s3 = boto3.client('s3')
     contents = []
     for item in s3.list_objects(Bucket=bucket)['Contents']:
-        content.append(item)
+        contents.append(item)
 
     return contents
 
