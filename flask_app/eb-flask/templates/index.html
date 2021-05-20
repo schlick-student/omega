@@ -39,7 +39,11 @@
           <h3>Output from Lambda Function in AWS cloud:</h3>
           <ul>
               <li>
-                <p> {{ awslambda }} </p>
+                <p>
+                    {% for each in awslambda %}
+                    {{ each }}
+                    {% end for %}}
+                </p>
               </li>
           </ul>
         </div>
