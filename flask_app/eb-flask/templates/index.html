@@ -40,8 +40,11 @@
           <ul>
               <li>
                 <p>
-                    {% for each in awslambda %}
-                    {{ each }}
+                    {% for genre, probability in awslambda %}
+                        <tr>
+                            <td>{{ genre }}</td>
+                            <td>{{ probability }}</td>
+                        </tr>
                     {% endfor %}
                 </p>
               </li>
