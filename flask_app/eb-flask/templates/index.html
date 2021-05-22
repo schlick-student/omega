@@ -32,13 +32,10 @@
         <div>
           <h3>This file has been uploaded:</h3>
           <ul>
-              <li>
                 <p> {{ fname }} </p>
-              </li>
           </ul>
           <h3>Output from Lambda Function in AWS cloud:</h3>
           <ul>
-              <li>
                 <p>
                     {% for genre, probability in awslambda %}
                         <tr>
@@ -47,7 +44,6 @@
                         </tr>
                     {% endfor %}
                 </p>
-              </li>
           </ul>
         </div>
     </div>
