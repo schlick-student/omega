@@ -108,13 +108,34 @@ def get_overall_predictions(prediction_list, genre_list):
 	final_probabilities_list = [list(a) for a in zip(final_probabilities_list, genre_list)]
 	
 	return sorted(final_probabilities_list, reverse=True)
+	
+def jsonify_response(final_probabilities):
+	response = {
+		'genre1' : final_probabilities[0][1],
+		'prob1' : final_probabilities[0][0],
+		'genre2' : final_probabilities[1][1],
+		'prob2' : final_probabilities[1][0],
+		'genre3' : final_probabilities[2][1],
+		'prob3' : final_probabilities[2][0]
+		}
+	return response
+
+def delete_files(filename):
+	files = os.listdir('.')
+	for file in files:
+		if(files.find(filename) > 0):
+			os.remove(file)
+		elif(files.find(filename[:-4]+'.png') > 0):
+			os.remove(file)	
 
 split_mp3_file("testing.mp3", 3)
 create_melspecs_from_audio_clips("testing.mp3")
 create_melspecs_from_audio_clips("testing.mp3")
 model = tf.keras.models.load_model("modelfit1")
 preds = predict_probabilities(model, "testing.png")
-print(get_overall_predictions(preds, GENRE_LIST))
+final_preds = get_overall_predictions(preds, GENRE_LIST)
+print(jsonify_response(final_preds))
+delete_files("testing.mp3")
 
 '''
 def lambda_handler(event, context):
