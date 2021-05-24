@@ -3,8 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Error</title>
+     <link rel="stylesheet" href="static/style.css" type="text/css">
 </head>
 <body>
-<p>ERROR: {{ errorMsg }}</p>
+      <!-- Header Ribbon Menu -->
+      <div id="wrapper">
+          <nav>
+              <ul class="navbar">
+                  <li><a href="/">Home</a></li>
+                  <li><a href="/about" class="active">About</a></li>
+              </ul>
+          </nav>
+      </div>
+      <p>ERROR: {{ errorMsg }}</p>
 </body>
 </html>
