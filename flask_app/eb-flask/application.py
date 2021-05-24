@@ -28,7 +28,7 @@ def list_files(bucket):
 def invokeLambda(filename):
     client = boto3.client('lambda', region_name='us-east-2')
     BUCKET = 'music-genre-input'
-    TESTFILE = 'uploads/' + filename
+    TESTFILE = filename
     print(TESTFILE)
     LAMBDA_NAME = 'docker-lambda'
     event = {
@@ -38,7 +38,6 @@ def invokeLambda(filename):
     result = client.invoke(FunctionName=LAMBDA_NAME, InvocationType='RequestResponse', Payload=json.dumps(event))
     range = result['Payload'].read()
     response = json.loads(range)
-    # os.remove(TESTFILE)
     return response
 
 
@@ -84,7 +83,7 @@ def upload():
         if not os.path.exists(UPLOAD_FOLDER):
             os.makedirs(UPLOAD_FOLDER)
         f.save(os.path.join(UPLOAD_FOLDER, filename))
-        upload_file(f"uploads\{filename}", BUCKET)
+        upload_file(f"{filename}", BUCKET)
         return redirect(url_for('upload_success', filename=filename))
 
 

@@ -20,39 +20,20 @@ GENRE_LIST = ['Electronic', 'Experimental', 'Folk', 'Hip-Hop',
                       'Instrumental', 'International', 'Pop', 'Rock']
 
 """
-Runs the entire prediction flow when a new song is
-uploaded.
-:param filepath:
-:return:
-"""
-def run_new_song_prediction(filepath, seconds_to_split, model_filepath, genre_list):
-
-	split_mp3_file(filepath, seconds_to_split)
-	time.sleep(30) # takes awhile for split songs to appear
-	num_melspecs = create_melspecs_from_audio_clips()
-	time.sleep(30) # takes awhile for melspecs to appear
-	model = tf.keras.models.load_model(model_filepath)
-	probabilities_list = predict_probabilities(model)
-	final_probabilities_list = get_overall_predictions(num_melspecs,probabilities_list,genre_list)
-	final_probabilities_list = sort_probabilities(final_probabilities_list)
-
-	return final_probabilities_list
-
-"""
 Splits mp3 file into specified segment of seconds.
 :param filename:
 :param seconds_to_split:
 :return:
  """
-def split_mp3_file(filename, seconds_to_split):
+def split_mp3_file(dirname, filename, seconds_to_split):
 	
-	split_song = AudioSegment.from_file(filename, format="mp3")
+	split_song = AudioSegment.from_file(dirname + filename, format="mp3")
 	split = 0
 	start = 0
 	end = seconds_to_split * (split +1) *1000
 	while(end < len(split_song)):
 		splote = split_song[start:end]
-		splote.export(str(split) + '-' + filename, format='mp3')
+		splote.export(dirname + str(split) + '-' + filename, format='mp3')
 		split += 1
 		start = seconds_to_split * (split) * 1000
 		end = seconds_to_split * (split + 1) * 1000
@@ -62,13 +43,13 @@ Takes split audio clips from memory and
 converts them to melspectrograms
 :return number_melspecs:
 """
-def create_melspecs_from_audio_clips(filename):
+def create_melspecs_from_audio_clips(dirname, filename):
 
 	number_melspecs = 0 # keep track of number of melspecs
-	files = os.listdir('.')
+	files = os.listdir(dirname)
 	for file in files:
 		if(file.find(filename) > 0):
-			testMelGenerator(file, file[:-4]+'.png')
+			testMelGenerator(dirname + file, dirname + file[:-4]+'.png')
 			number_melspecs +=1
 	return number_melspecs		
 
@@ -87,13 +68,13 @@ def testMelGenerator(inpath, outpath):
 	plt.savefig(outpath, bbox_inches=None, pad_inches=0)
 	plt.close()
 
-def predict_probabilities(model, filename):
+def predict_probabilities(model, dirname, filename):
 	
 	prediction_list = []
-	files = os.listdir('.')
+	files = os.listdir('/tmp')
 	for file in files:
 		if(file.find(filename) > 0):
-			img = image.load_img(file, target_size=(160,240), color_mode='rgba')
+			img = image.load_img(dirname + file, target_size=(160,240), color_mode='rgba')
 			img_array = np.array(img).astype('float32') / 255
 			img_batch = np.expand_dims(img_array, axis=0)
 			prediction_list.append(model.predict(img_batch))
@@ -120,24 +101,26 @@ def jsonify_response(final_probabilities):
 		}
 	return response
 
-def delete_files(filename):
-	files = os.listdir('.')
+def delete_files(dirname, filename):
+	files = os.listdir(dirname)
 	for file in files:
-		if(files.find(filename) > 0):
-			os.remove(file)
-		elif(files.find(filename[:-4]+'.png') > 0):
-			os.remove(file)	
+		if(file.find(filename) > 0):
+			os.remove(dirname + file)
+		elif(file.find(filename[:-4]+'.png') > 0):
+			os.remove(dirname + file)	
 
-split_mp3_file("testing.mp3", 3)
-create_melspecs_from_audio_clips("testing.mp3")
-create_melspecs_from_audio_clips("testing.mp3")
-model = tf.keras.models.load_model("modelfit1")
-preds = predict_probabilities(model, "testing.png")
-final_preds = get_overall_predictions(preds, GENRE_LIST)
-print(jsonify_response(final_preds))
-delete_files("testing.mp3")
+def predict_song(dirname, filename):
+	split_mp3_file(dirname, filename, 3)
+	create_melspecs_from_audio_clips(dirname, filename)
+	model = tf.keras.models.load_model("modelfit1")
+	preds = predict_probabilities(model, dirname , filename[:-3]+"png")
+	final_preds = get_overall_predictions(preds, GENRE_LIST)
+	delete_files(dirname, filename)
+	return jsonify_response(final_preds)
 
-'''
+#print(predict_song("/tmp/","sample2.mp3"))
+
+
 def lambda_handler(event, context):
 	bucket = event['bucket']
 	key = event['key']
@@ -146,16 +129,11 @@ def lambda_handler(event, context):
 	print("Received event: " + json.dumps(event, indent=2))
 	try:
 		s3.download_file(bucket, key, '/tmp/test.mp3')
-		y, sr = librosa.load('/tmp/test.mp3')
-		#y, sr = librosa.load(librosa.ex('nutcracker'))
-		tempo, beat_frames = librosa.beat.beat_track(y=y, sr=sr)
-		response = {
-			'beats' : ('Estimated tempo: {:.2f} beats per minute'.format(tempo))
-			}
+		response = predict_song('/tmp/','test.mp3')
 		print("Success")
-		return response['beats']
+		return response
 	except Exception as e:
 		print(e)
 		print('Error getting object {} from bucket {}. Make sure they exist and your bucket is in the same region as this function.'.format(key, bucket))
 		raise e
-'''
+
