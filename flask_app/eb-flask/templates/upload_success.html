@@ -29,6 +29,36 @@
             <input type=submit value=Upload>
           </form>
         </div>
+        <div>
+          <h3>This file has been uploaded:</h3>
+          <ul>
+                <p> {{ fname }} </p>
+          </ul>
+          <h3>Output from Lambda Function in AWS cloud:</h3>
+                <p>
+                    <table class="center">
+                        <tr>
+                            <th> Genre </th>
+                            <th> Probability </th>
+                        </tr>
+                        <tr>
+                            <td> {{ genre1 }}</td>
+                            <td> {{ prob1 }}%</td>
+                        </tr>
+                        <tr>
+                            <td> {{ genre2 }}</td>
+                            <td> {{ prob2 }}%</td>
+                        </tr>
+                        <tr>
+                            <td> {{ genre3 }}</td>
+                            <td> {{ prob3 }}%</td>
+                        </tr>
+
+
+
+                    </table>
+                </p>
+        </div>
     </div>
   </body>
 </html>

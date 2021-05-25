@@ -97,7 +97,7 @@ def upload_success(filename):
     prob2 = round(lambdaresponse['prob2']*100, 2)
     genre3 = lambdaresponse['genre3']
     prob3 = round(lambdaresponse['prob3']*100, 2)
-    return render_template('index.html', fname=the_file, genre1=genre1, prob1=prob1, genre2=genre2, prob2=prob2, genre3=genre3, prob3=prob3)
+    return render_template('upload_success.html', fname=the_file, genre1=genre1, prob1=prob1, genre2=genre2, prob2=prob2, genre3=genre3, prob3=prob3)
 
 
 if __name__ == '__main__':
