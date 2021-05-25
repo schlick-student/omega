@@ -20,7 +20,7 @@
     <div class="content">
         <h3>Top-n Music Classification</h3>
         <p>Upload a .mp3 or .wav file here. The maximum size accepted is 10 MB.</p>
-        <p>We will predict the genre of your audiofile, and list the results from most to least likely</p>
+        <p>We will predict the genre of your audio file, and list the top 3 genres predicted</p>
         <img src="static/omega_staff.png" alt="Omega symbol with musical staff" width="500" height="333"></img>
         <div>
           <h3>Upload file:</h3>
@@ -36,12 +36,27 @@
           </ul>
           <h3>Output from Lambda Function in AWS cloud:</h3>
                 <p>
-                    {% for genre, probability in awslambda %}
+                    <table class="center">
                         <tr>
-                            <td>{{ genre }}</td>
-                            <td>{{ probability }}</td>
+                            <th> Genre </th>
+                            <th> Probability </th>
                         </tr>
-                    {% endfor %}
+                        <tr>
+                            <td> {{ genre1 }}</td>
+                            <td> {{ prob1 }}%</td>
+                        </tr>
+                        <tr>
+                            <td> {{ genre2 }}</td>
+                            <td> {{ prob2 }}%</td>
+                        </tr>
+                        <tr>
+                            <td> {{ genre3 }}</td>
+                            <td> {{ prob3 }}%</td>
+                        </tr>
+
+
+
+                    </table>
                 </p>
         </div>
     </div>

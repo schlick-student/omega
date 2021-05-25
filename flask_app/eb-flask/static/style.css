@@ -17,6 +17,11 @@ body {
 	line-height:24px;
 }
 
+table.center {
+	margin-left: auto;
+	margin-right: auto;
+}
+
 #wrapper {
 	max-width: 2060px;
 	margin: 0 auto;
