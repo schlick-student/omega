@@ -46,7 +46,7 @@ application = Flask(__name__)
 application.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 10  # 1 MB is about 1 minute audio, 10 MB max
 application.config['ALLOWED_EXTENSIONS'] = ['.mp3', '.wav']
 
-UPLOAD_FOLDER = 'uploads'
+UPLOAD_FOLDER = './uploads'
 BUCKET = 'music-genre-input'
 
 
@@ -83,7 +83,7 @@ def upload():
         if not os.path.exists(UPLOAD_FOLDER):
             os.makedirs(UPLOAD_FOLDER)
         f.save(os.path.join(UPLOAD_FOLDER, filename))
-        upload_file(f"{filename}", BUCKET)
+        upload_file(UPLOAD_FOLDER + "/" +filename, BUCKET)
         return redirect(url_for('upload_success', filename=filename))
 
 
